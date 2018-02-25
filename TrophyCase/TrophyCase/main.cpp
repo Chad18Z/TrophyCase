@@ -160,7 +160,7 @@ void AddNewTrophy()
 	} while (tempColor != "");
 
 
-	Trophy newTrophy = Trophy(trophyName, trophyLevel, trophyColor); // instantiate new trophy
+	Trophy newTrophy(trophyName, trophyLevel, trophyColor); // instantiate new trophy
 	Trophies->AddTrophy(newTrophy);
 	cout << "New trophy added" << endl;
 }
@@ -170,7 +170,7 @@ void CopyTrophy()
 {
 	string trophyName = GetString("Please enter the trophy's name that you want to copy: ");
 	int indexOfTrophy = FindIndexOfTrophy(trophyName);
-	Trophy& newTrophy = Trophies->GetTrophy(indexOfTrophy);
+	Trophy newTrophy(Trophies->GetTrophy(indexOfTrophy));
 	Trophies->AddTrophy(newTrophy); // add new trophy to array
 }
 

@@ -19,11 +19,11 @@ Trophy::Trophy(string& name, int level, Color& color)
 }
 
 // Copy constructor
-Trophy::Trophy(const Trophy& trophyToCopy)
+Trophy::Trophy(Trophy& trophyToCopy)
 {
-	//m_level = trophyToCopy.GetLevel;
-	//m_color = trophyToCopy.GetColor;
-	//*m_name = trophyToCopy.GetName;
+	m_name = new string(*trophyToCopy.m_name);
+	m_color = new Color(*trophyToCopy.m_color);
+	m_level = new int(*trophyToCopy.m_level);
 }
 
 // returns the name of the trophy

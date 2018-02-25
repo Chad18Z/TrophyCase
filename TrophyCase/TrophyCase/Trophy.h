@@ -13,7 +13,7 @@ class Trophy
 {
 public:
 	Trophy();
-	Trophy(const Trophy& trophyToCopy);
+	Trophy(Trophy& trophyToCopy);
 	Trophy(string& name, int level, Color& color);
 	string GetName();
 	string ColorToString(Color& color);
