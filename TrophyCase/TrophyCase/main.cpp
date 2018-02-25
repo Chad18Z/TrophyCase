@@ -1,4 +1,5 @@
 #include "Trophy.h"
+#include "Trophycase.h"
 #include <iostream>
 
 using namespace std;
@@ -19,13 +20,14 @@ void PrintTrophies();
 void PrintMenu();
 int FindIndexOfTrophy(string);
 
-Trophy* Trophies[10]; // array to hold trophies
-int numberOfTrophies; // number of trophies created by the user
+Trophycase* Trophies = new Trophycase(); // declare a trophycase
 
-					  // Entry point for the application
+// Entry point for the application
 int main()
 {
+	
 	int inputFromUser; // Initialize variable to hold user input
+
 	DisplayWelcomeMessage(); // Show the welcome message
 							 // Main loop of the application
 	do
@@ -158,9 +160,8 @@ void AddNewTrophy()
 	} while (tempColor != "");
 
 
-	Trophy* newTrophy = new Trophy(trophyName, trophyLevel, trophyColor); // instantiate new trophy
-	Trophies[numberOfTrophies] = newTrophy; // add new trophy to array
-	numberOfTrophies++; // increment number of trophies that user has created
+	Trophy newTrophy = Trophy(trophyName, trophyLevel, trophyColor); // instantiate new trophy
+	Trophies->AddTrophy(newTrophy);
 	cout << "New trophy added" << endl;
 }
 
@@ -169,20 +170,16 @@ void CopyTrophy()
 {
 	string trophyName = GetString("Please enter the trophy's name that you want to copy: ");
 	int indexOfTrophy = FindIndexOfTrophy(trophyName);
-	Trophy* newTrophy = new Trophy(*Trophies[indexOfTrophy]);
-	Trophies[numberOfTrophies] = newTrophy; // add new trophy to array
-	numberOfTrophies++; // increment number of trophies that user has created
+	Trophy& newTrophy = Trophies->GetTrophy(indexOfTrophy);
+	Trophies->AddTrophy(newTrophy); // add new trophy to array
 }
 
 // Remove a trohpy from the array.....also frees the memory
 void DeleteTrophy()
 {
 	string trophyName = GetString("Please enter the trophy's name that you want to delete: ");
-	int indexOfTrophy = FindIndexOfTrophy(trophyName);
-	numberOfTrophies--; // decrement counter
-	Trophies[indexOfTrophy] = Trophies[numberOfTrophies]; // assign last trophy in array to the deleted trophy's position
-	delete Trophies[numberOfTrophies + 1]; // for every new we need a delete
-	Trophies[numberOfTrophies] = NULL; // free memory
+	int indexOfTrophy = FindIndexOfTrophy(trophyName);	
+	Trophies->DeleteTrophy(indexOfTrophy);
 	cout << endl << "Trophy deleted." << endl;
 }
 // Change a trophy's name
@@ -191,7 +188,8 @@ void RenameTrophy()
 	string trophyName = GetString("Please enter the trophy's name that you want to rename: ");
 	int indexOfTrophy = FindIndexOfTrophy(trophyName);
 	string NewName = GetString("Please enter the trophy's new name: ");
-	Trophies[indexOfTrophy]->SetName(NewName);
+	Trophy& trophy = Trophies->GetTrophy(indexOfTrophy);
+	trophy.SetName(NewName);
 	cout << endl << "Name Changed to: " << NewName << endl;
 }
 // Change a trophy's level
@@ -200,7 +198,8 @@ void ChangeLevelTrophy()
 	string trophyName = GetString("Please enter the trophy's name that you want to relevel: ");
 	int indexOfTrophy = FindIndexOfTrophy(trophyName);
 	int trophyLevel = GetShiftValue("Please enter the trophy's level: ");
-	Trophies[indexOfTrophy]->SetLevel(trophyLevel);
+	Trophy& trophy = Trophies->GetTrophy(indexOfTrophy);
+	trophy.SetLevel(trophyLevel);
 	cout << endl << "Trophy's level changed" << endl;
 }
 // Change a trophy's color
@@ -215,17 +214,20 @@ void ChangeColorTrophy()
 		string tempColor = GetString("Please enter the trophy's color  BRONZE, SILVER, or GOLD (case sensitive): ");
 		if (tempColor == "GOLD")
 		{
-			Trophies[indexOfTrophy]->SetColor(GOLD);
+			Trophy& newTrophy = Trophies->GetTrophy(indexOfTrophy);
+			newTrophy.SetColor(GOLD);
 			tempColor = "";
 		}
 		else if (tempColor == "BRONZE")
 		{
-			Trophies[indexOfTrophy]->SetColor(BRONZE);
+			Trophy& newTrophy = Trophies->GetTrophy(indexOfTrophy);
+			newTrophy.SetColor(BRONZE);
 			tempColor = "";
 		}
 		else if (tempColor == "SILVER")
 		{
-			Trophies[indexOfTrophy]->SetColor(SILVER);
+			Trophy& newTrophy = Trophies->GetTrophy(indexOfTrophy);
+			newTrophy.SetColor(SILVER);
 			tempColor = "";
 		}
 	} while (tempColor != "");
@@ -234,19 +236,20 @@ void ChangeColorTrophy()
 void PrintTrophies()
 {
 	cout << "All existing trophies." << endl << endl;
-	for (int i = 0; i < numberOfTrophies; i++)
+	for (int i = 0; i < Trophies->GetNumberOfTrophies(); i++)
 	{
-		Trophies[i]->Print();
+		Trophy& trophy = Trophies->GetTrophy(i);
+		trophy.Print();
 	}
-
 }
 // this method find the index of the trophy. Assuming they all have unique names.
 int FindIndexOfTrophy(string testString)
 {
 	int index = 0;
-	for (int i = 0; i < numberOfTrophies; i++)
+	for (int i = 0; i < Trophies->GetNumberOfTrophies(); i++)
 	{
-		if (Trophies[i]->GetName() == testString)
+		Trophy& trophy = Trophies->GetTrophy(i);
+		if (trophy.GetName() == testString)
 		{
 			index = i;
 		}
